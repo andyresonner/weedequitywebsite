@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The WEQ50 Index | Weed Equity</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Base styles from main site */
+        :root {
+            --bg-dark: #111827; --bg-light: #1F2937; --text-main: #F9FAFB; --text-secondary: #9CA3AF; --accent-green: #34D399; --accent-purple: #8B5CF6; --border-color: #374151;
+        }
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; }
+        .font-display { font-family: 'Playfair Display', serif; }
+        .accent-green-text { color: var(--accent-green); }
+        .border-color { border-color: var(--border-color); }
+        .bg-light { background-color: var(--bg-light); }
+
+        /* The problematic line has been removed from this class */
+        .parallax-bg {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-gray-900/80 backdrop-blur-lg sticky top-0 z-50 border-b border-color">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="font-display text-3xl font-bold tracking-wider">
+                WEED EQUITY
+            </a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="index.html#intel" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Market Intel</a>
+                <a href="index.html#research" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Deep Dives</a>
+                <a href="weq50.html" class="text-sm font-bold accent-green-text hover:text-white transition-colors">WEQ50 Index</a>
+                <a href="index.html#subscribe" class="bg-emerald-500 hover:bg-emerald-600 text-black font-bold py-2 px-5 rounded-md transition-colors text-sm">
+                    SUBSCRIBE
+                </a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </nav>
+         <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4 space-y-3">
+            <a href="index.html#intel" class="block text-gray-300 hover:text-white transition-colors">Market Intel</a>
+            <a href="index.html#research" class="block text-gray-300 hover:text-white transition-colors">Deep Dives</a>
+            <a href="weq50.html" class="block accent-green-text hover:text-white transition-colors">WEQ50 Index</a>
+            <a href="index.html#subscribe" class="block bg-emerald-500 mt-2 text-center text-black font-bold py-2 px-5 rounded-md transition-colors">
+                SUBSCRIBE
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero-weq50" class="relative py-24 md:py-40 text-center text-white parallax-bg" style="background-image: url('images/weq50-hero-bg.jpg');">
+            <div class="absolute inset-0 bg-black/60"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-black uppercase">The <span class="accent-green-text">WEQ50</span></h1>
+                <p class="mt-4 text-lg md:text-xl max-w-3xl mx-auto text-gray-200">The definitive benchmark for the global cannabis industry. Curated by experts, for serious investors.</p>
+                <div class="mt-12 bg-gray-900/50 backdrop-blur-sm p-8 rounded-lg max-w-2xl mx-auto inline-block">
+                    <p id="indexValue" class="text-6xl font-bold text-emerald-400">1,204.77</p>
+                    <p id="indexChange" class="text-2xl text-red-500 font-semibold mt-2">-12.31 (-1.01%) Today</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <div class="py-20 bg-light">
+            <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-12">
+                
+                <!-- Left Column: Chart & Holdings -->
+                <div class="lg:col-span-2">
+                    <!-- Chart -->
+                    <div class="bg-gray-900 p-6 rounded-lg">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="font-display text-2xl font-bold">Historical Performance</h2>
+                            <div class="flex space-x-2 text-xs font-semibold">
+                                <button class="bg-emerald-500 text-black px-3 py-1 rounded-md">1M</button>
+                            </div>
+                        </div>
+                        <!-- Canvas for the chart, wrapped in a container with a fixed height -->
+                        <div class="relative h-96">
+                            <canvas id="weq50Chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Holdings Table -->
+                    <div class="mt-12">
+                        <h2 class="font-display text-3xl font-bold mb-6">Index Holdings</h2>
+                        <div class="bg-gray-900 rounded-lg overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-xs text-gray-400 uppercase bg-gray-800">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">Company</th>
+                                        <th scope="col" class="px-6 py-3">Price</th>
+                                        <th scope="col" class="px-6 py-3">Change</th>
+                                        <th scope="col" class="px-6 py-3 hidden md:table-cell">Market Cap</th>
+                                        <th scope="col" class="px-6 py-3 hidden md:table-cell">Weight</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- This is a representative sample of the 50 holdings. -->
+                                    <tr class="border-b border-color">
+                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap flex items-center"><img src="https://placehold.co/32x32/1F2937/FFFFFF?text=GTI" class="w-8 h-8 rounded-full mr-3" alt="GTI logo">Green Thumb (GTBIF)</th>
+                                        <td class="px-6 py-4">$11.85</td>
+                                        <td class="px-6 py-4 text-green-500">+1.20%</td>
+                                        <td class="px-6 py-4 hidden md:table-cell">$2.81B</td>
+                                        <td class="px-6 py-4 hidden md:table-cell">5.80%</td>
+                                    </tr>
+                                    <tr class="border-b border-color bg-gray-800/50">
+                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap flex items-center"><img src="https://placehold.co/32x32/1F2937/FFFFFF?text=CURLF" class="w-8 h-8 rounded-full mr-3" alt="CURLF logo">Curaleaf (CURLF)</th>
+                                        <td class="px-6 py-4">$4.20</td>
+                                        <td class="px-6 py-4 text-red-500">-0.95%</td>
+                                        <td class="px-6 py-4 hidden md:table-cell">$3.05B</td>
+                                        <td class="px-6 py-4 hidden md:table-cell">6.21%</td>
+                                    </tr>
+                                    <tr class="border-b border-color">
+                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap flex items-center"><img src="https://placehold.co/32x32/1F2937/FFFFFF?text=TLRY" class="w-8 h-8 rounded-full mr-3" alt="TLRY logo">Tilray Brands (TLRY)</th>
+                                        <td class="px-6 py-4">$1.67</td>
+                                        <td class="px-6 py-4 text-green-500">+2.45%</td>
+                                        <td class="px-6 py-4 hidden md:table-cell">$1.20B</td>
+                                        <td class="px-6 py-4 hidden md:table-cell">2.95%</td>
+                                    </tr>
+                                     <tr class="border-b border-color bg-gray-800/50">
+                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap flex items-center"><img src="https://placehold.co/32x32/1F2937/FFFFFF?text=IIPR" class="w-8 h-8 rounded-full mr-3" alt="IIPR logo">Innov. Ind. Prop. (IIPR)</th>
+                                        <td class="px-6 py-4">$94.50</td>
+                                        <td class="px-6 py-4 text-red-500">-1.50%</td>
+                                        <td class="px-6 py-4 hidden md:table-cell">$2.67B</td>
+                                        <td class="px-6 py-4 hidden md:table-cell">5.50%</td>
+                                    </tr>
+                                    <tr class="border-b-0">
+                                       <td colspan="5" class="text-center px-6 py-4 text-gray-400">... and 46 more holdings.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Methodology & Movers -->
+                <aside class="lg:col-span-1">
+                    <div class="bg-gray-900 p-6 rounded-lg sticky top-32">
+                        <h3 class="font-display text-2xl font-bold border-b-2 border-emerald-500 pb-3 mb-4">Methodology</h3>
+                        <p class="text-sm text-gray-300 mb-6">The WEQ50 is a proprietary, market-cap-weighted index of 50 companies curated by the Weed Equity Selection Committee to be the definitive benchmark for the global cannabis sector. Holdings are selected based on financial health, market position, sector diversification, and corporate governance. The index is rebalanced quarterly.</p>
+
+                        <h3 class="font-display text-2xl font-bold border-b-2 border-emerald-500 pb-3 mb-4 mt-8">Top Movers</h3>
+                        
+                        <h4 class="font-semibold mt-4 mb-2">Today's Gainers</h4>
+                        <ul class="text-sm space-y-2">
+                           <li class="flex justify-between items-center"><span>Canopy Growth (CGC)</span> <span class="font-bold text-green-500">+4.15%</span></li>
+                           <li class="flex justify-between items-center"><span>Tilray Brands (TLRY)</span> <span class="font-bold text-green-500">+2.45%</span></li>
+                           <li class="flex justify-between items-center"><span>Verano Holdings (VRNOF)</span> <span class="font-bold text-green-500">+1.98%</span></li>
+                        </ul>
+
+                        <h4 class="font-semibold mt-6 mb-2">Today's Losers</h4>
+                        <ul class="text-sm space-y-2">
+                           <li class="flex justify-between items-center"><span>WM Technology (MAPS)</span> <span class="font-bold text-red-500">-3.12%</span></li>
+                           <li class="flex justify-between items-center"><span>Trulieve (TCNNF)</span> <span class="font-bold text-red-500">-2.80%</span></li>
+                           <li class="flex justify-between items-center"><span>AYR Wellness (AYRWF)</span> <span class="font-bold text-red-500">-2.55%</span></li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-black py-16">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- About -->
+                <div class="col-span-1 md:col-span-2">
+                    <h4 class="font-display text-xl font-bold mb-4">WEED EQUITY</h4>
+                    <p class="text-gray-400 text-sm max-w-md">Weed Equity has been delivering raw, unfiltered intelligence for the cannabis industry since 2015.</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html#intel" class="text-gray-400 hover:text-white">Market Intel</a></li>
+                        <li><a href="index.html#research" class="text-gray-400 hover:text-white">Deep Dives</a></li>
+                        <li><a href="weq50.html" class="text-gray-400 hover:text-white">WEQ50 Index</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Social -->
+                 <div>
+                    <h4 class="text-lg font-semibold mb-4">Reach Us</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><i class="fas fa-envelope mr-2"></i> intel@weedequity.com</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i> 999 Canada Pl, Vancouver, BC V6C 3E1</li>
+                    </ul>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-color pt-8 text-center text-sm text-gray-500">
+                <p>&copy; 2025 Weed Equity. All Rights Reserved. This is not financial advice.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- MOBILE MENU SCRIPT ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- CHART.JS SCRIPT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('weq50Chart').getContext('2d');
+
+            // --- To update the chart, manually change the numbers in this data array ---
+            const chartData = [
+                1180, 1182, 1175, 1185, 1192, 1195, 1201, 1198, 1205, 1215, 
+                1212, 1218, 1225, 1230, 1222, 1228, 1235, 1240, 1238, 1230,
+                1220, 1210, 1215, 1208, 1200, 1195
+            ];
+            // ---
+
+            // --- To update the chart, manually change the dates in this labels array ---
+            const chartLabels = [
+                'May 8', 'May 9', 'May 10', 'May 11', 'May 12', 'May 13', 'May 14', 'May 15', 'May 16', 'May 17',
+                'May 18', 'May 19', 'May 20', 'May 21', 'May 22', 'May 23', 'May 24', 'May 25', 'May 26', 'May 27',
+                'May 28', 'May 29', 'May 30', 'May 31', 'Jun 1', 'Jun 2'
+            ];
+            // ---
+
+            const indexValueEl = document.getElementById('indexValue');
+            const indexChangeEl = document.getElementById('indexChange');
+
+            const currentValue = chartData[chartData.length - 1];
+            const prevValue = chartData[chartData.length - 2];
+            const change = currentValue - prevValue;
+            const percentChange = (change / prevValue) * 100;
+
+            indexValueEl.textContent = currentValue.toFixed(2);
+            indexChangeEl.textContent = `${change.toFixed(2)} (${percentChange.toFixed(2)}%) Today`;
+            indexChangeEl.classList.toggle('text-green-500', change >= 0);
+            indexChangeEl.classList.toggle('text-red-500', change < 0);
+
+
+            // Create the gradient for the line chart
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(52, 211, 153, 0.4)');
+            gradient.addColorStop(1, 'rgba(52, 211, 153, 0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'WEQ50 Index',
+                        data: chartData,
+                        borderColor: 'rgb(52, 211, 153)',
+                        backgroundColor: gradient,
+                        borderWidth: 2.5,
+                        pointRadius: 0, // No points by default
+                        pointHoverRadius: 6, // Larger points on hover
+                        pointBackgroundColor: 'rgb(52, 211, 153)',
+                        pointBorderColor: 'white',
+                        pointHoverBorderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // This is key to controlling the size
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#111827',
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 12 },
+                            padding: 12,
+                            cornerRadius: 6,
+                            displayColors: false,
+                            yAlign: 'bottom',
+                            intersect: false,
+                            mode: 'index',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#9CA3AF', font: { size: 12 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#9CA3AF', font: { size: 12 } }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

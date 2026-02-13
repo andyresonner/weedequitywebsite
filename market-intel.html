@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Intel | Weed Equity</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Base styles from main site */
+        :root {
+            --bg-dark: #111827; --bg-light: #1F2937; --text-main: #F9FAFB; --text-secondary: #9CA3AF; --accent-green: #34D399; --accent-purple: #8B5CF6; --border-color: #374151;
+        }
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; }
+        .font-display { font-family: 'Playfair Display', serif; }
+        .accent-green-text { color: var(--accent-green); }
+        .border-color { border-color: var(--border-color); }
+        .bg-light { background-color: var(--bg-light); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-gray-900/80 backdrop-blur-lg sticky top-0 z-50 border-b border-color">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="font-display text-3xl font-bold tracking-wider">
+                WEED EQUITY
+            </a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="market-intel.html" class="text-sm font-bold accent-green-text hover:text-white transition-colors">Market Intel</a>
+                <a href="index.html#research" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Deep Dives</a>
+                <a href="weq50.html" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">WEQ50 Index</a>
+                <a href="index.html#subscribe" class="bg-emerald-500 hover:bg-emerald-600 text-black font-bold py-2 px-5 rounded-md transition-colors text-sm">
+                    SUBSCRIBE
+                </a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </nav>
+         <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4 space-y-3">
+            <a href="market-intel.html" class="block accent-green-text hover:text-white transition-colors">Market Intel</a>
+            <a href="index.html#research" class="block text-gray-300 hover:text-white transition-colors">Deep Dives</a>
+            <a href="weq50.html" class="block text-gray-300 hover:text-white transition-colors">WEQ50 Index</a>
+            <a href="index.html#subscribe" class="block bg-emerald-500 mt-2 text-center text-black font-bold py-2 px-5 rounded-md transition-colors">
+                SUBSCRIBE
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Featured Article Section -->
+        <section class="relative bg-gray-900 text-white">
+            <div class="container mx-auto grid grid-cols-1 lg:grid-cols-2">
+                <div class="px-6 lg:px-12 py-20 flex flex-col justify-center">
+                    <span class="text-xs font-bold uppercase" style="color: var(--accent-purple);">Featured Analysis</span>
+                    <h1 class="font-display text-4xl md:text-6xl font-black mt-2">The Rescheduling Endgame</h1>
+                    <p class="mt-4 text-lg text-gray-300">With the DOJ's official recommendation, the cannabis industry stands at a historic crossroads. We model the three most likely outcomes for capital markets, M&A activity, and international expansion.</p>
+                    <a href="report-rescheduling.html" class="bg-emerald-500 hover:bg-emerald-600 text-black font-bold py-3 px-8 rounded-md transition-colors mt-8 self-start">
+                        Read the Full Report
+                    </a>
+                </div>
+                <div class="h-80 lg:h-auto bg-cover bg-center" style="background-image: url('images/intel-featured.jpg')">
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Feed -->
+        <div class="py-20 bg-light">
+            <div class="container mx-auto px-6">
+                <!-- Category Filters -->
+                <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-12">
+                    <button class="filter-btn bg-emerald-500 text-black font-semibold py-2 px-5 rounded-md text-sm" data-filter="all">All Intel</button>
+                    <button class="filter-btn bg-gray-700 text-gray-200 font-semibold py-2 px-5 rounded-md text-sm" data-filter="markets">Markets</button>
+                    <button class="filter-btn bg-gray-700 text-gray-200 font-semibold py-2 px-5 rounded-md text-sm" data-filter="regulation">Regulation</button>
+                    <button class="filter-btn bg-gray-700 text-gray-200 font-semibold py-2 px-5 rounded-md text-sm" data-filter="culture">Culture</button>
+                    <button class="filter-btn bg-gray-700 text-gray-200 font-semibold py-2 px-5 rounded-md text-sm" data-filter="sponsored">Sponsored</button>
+                </div>
+
+                <!-- Article Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="article-grid">
+                    
+                    <!-- Article 1 -->
+                    <div class="bg-gray-900 rounded-lg overflow-hidden article-card" data-category="markets">
+                        <a href="article-florida.html" class="block group">
+                            <img src="images/intel-article-1.jpg" alt="Map of Florida with cannabis leaf" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <span class="text-xs font-bold uppercase" style="color: var(--accent-green);">Markets</span>
+                                <h3 class="font-display text-2xl font-bold mt-2 group-hover:text-emerald-400 transition-colors">Florida's Adult-Use Market: A $6B Ticking Clock</h3>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Article 2 -->
+                    <div class="bg-gray-900 rounded-lg overflow-hidden article-card" data-category="culture">
+                        <a href="#" class="block group">
+                            <img src="images/intel-article-2.jpg" alt="Cannabis beverage cans" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <span class="text-xs font-bold uppercase" style="color: var(--accent-purple);">Culture</span>
+                                <h3 class="font-display text-2xl font-bold mt-2 group-hover:text-emerald-400 transition-colors">Beyond the Dispensary: Cannabis Beverages Take On Big Alcohol</h3>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <!-- Article 3 (Sponsored) -->
+                    <div class="bg-gray-900 rounded-lg overflow-hidden article-card border-2 border-yellow-400/50" data-category="sponsored">
+                        <a href="#" class="block group">
+                            <img src="images/intel-article-3.jpg" alt="Abstract software interface" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <span class="text-xs font-bold uppercase text-yellow-400">Sponsored</span>
+                                <h3 class="font-display text-2xl font-bold mt-2 group-hover:text-emerald-400 transition-colors">How [Client Company] is Solving the Supply Chain Puzzle</h3>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <!-- Article 4 -->
+                    <div class="bg-gray-900 rounded-lg overflow-hidden article-card" data-category="regulation">
+                        <a href="#" class="block group">
+                            <img src="images/intel-article-4.jpg" alt="DEA building" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <span class="text-xs font-bold uppercase" style="color: var(--accent-purple);">Regulation</span>
+                                <h3 class="font-display text-2xl font-bold mt-2 group-hover:text-emerald-400 transition-colors">Reading the Tea Leaves at the DEA</h3>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Article 5 -->
+                    <div class="bg-gray-900 rounded-lg overflow-hidden article-card" data-category="markets">
+                        <a href="#" class="block group">
+                            <img src="images/intel-article-5.jpg" alt="New York City skyline" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <span class="text-xs font-bold uppercase" style="color: var(--accent-green);">Markets</span>
+                                <h3 class="font-display text-2xl font-bold mt-2 group-hover:text-emerald-400 transition-colors">New York's Messy Rollout: Winners and Losers</h3>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Article 6 -->
+                    <div class="bg-gray-900 rounded-lg overflow-hidden article-card" data-category="culture">
+                        <a href="#" class="block group">
+                            <img src="images/intel-article-6.jpg" alt="Celebrity with product" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <span class="text-xs font-bold uppercase" style="color: var(--accent-purple);">Culture</span>
+                                <h3 class="font-display text-2xl font-bold mt-2 group-hover:text-emerald-400 transition-colors">Celebrity Brands: Are They Worth the Hype?</h3>
+                            </div>
+                        </a>
+                    </div>
+                    
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex justify-center mt-16">
+                    <nav class="flex items-center space-x-2">
+                        <a href="#" class="text-gray-400 px-4 py-2 rounded-md hover:bg-gray-700"><i class="fas fa-arrow-left"></i></a>
+                        <a href="#" class="bg-emerald-500 text-black px-4 py-2 rounded-md font-bold">1</a>
+                        <a href="#" class="text-gray-400 px-4 py-2 rounded-md hover:bg-gray-700">2</a>
+                        <a href="#" class="text-gray-400 px-4 py-2 rounded-md hover:bg-gray-700"><i class="fas fa-arrow-right"></i></a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-black py-16">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <h4 class="font-display text-xl font-bold mb-4">WEED EQUITY</h4>
+                    <p class="text-gray-400 text-sm max-w-md">Weed Equity has been delivering raw, unfiltered intelligence for the cannabis industry since 2015.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="market-intel.html" class="text-gray-400 hover:text-white">Market Intel</a></li>
+                        <li><a href="index.html#research" class="text-gray-400 hover:text-white">Deep Dives</a></li>
+                        <li><a href="weq50.html" class="text-gray-400 hover:text-white">WEQ50 Index</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h4 class="text-lg font-semibold mb-4">Reach Us</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><i class="fas fa-envelope mr-2"></i> intel@weedequity.com</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i> 999 Canada Pl, Vancouver, BC V6C 3E1</li>
+                    </ul>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-color pt-8 text-center text-sm text-gray-500">
+                <p>&copy; 2025 Weed Equity. All Rights Reserved. This is not financial advice.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- MOBILE MENU SCRIPT ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- FILTER SCRIPT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const articles = document.querySelectorAll('.article-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update button styles
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('bg-emerald-500', 'text-black');
+                        btn.classList.add('bg-gray-700', 'text-gray-200');
+                    });
+                    button.classList.add('bg-emerald-500', 'text-black');
+                    button.classList.remove('bg-gray-700', 'text-gray-200');
+
+                    const filter = button.getAttribute('data-filter');
+
+                    // Filter articles
+                    articles.forEach(article => {
+                        if (filter === 'all' || article.getAttribute('data-category') === filter) {
+                            article.style.display = 'block';
+                        } else {
+                            article.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weed Equity | The Unassailable Edge in Cannabis Intelligence</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Base styles from main site */
+        :root {
+            --bg-dark: #111827; /* Tailwind gray-900 */
+            --bg-light: #1F2937; /* Tailwind gray-800 */
+            --text-main: #F9FAFB; /* Tailwind gray-50 */
+            --text-secondary: #9CA3AF; /* Tailwind gray-400 */
+            --accent-green: #34D399; /* Tailwind emerald-400 */
+            --accent-purple: #8B5CF6; /* Tailwind violet-500 */
+            --border-color: #374151; /* Tailwind gray-700 */
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+        }
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        .accent-green-text { color: var(--accent-green); }
+        .accent-green-bg { background-color: var(--accent-green); }
+        .accent-purple-text { color: var(--accent-purple); }
+        .accent-purple-bg { background-color: var(--accent-purple); }
+        .border-color { border-color: var(--border-color); }
+        .bg-light { background-color: var(--bg-light); }
+
+        /* Custom glow effect */
+        .glow-effect {
+            box-shadow: 0 0 5px var(--accent-green), 0 0 15px var(--accent-green), 0 0 30px var(--accent-purple);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-gray-900/80 backdrop-blur-lg sticky top-0 z-50 border-b border-color">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#hero" class="font-display text-3xl font-bold tracking-wider">
+                WEED EQUITY
+            </a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="market-intel.html" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Market Intel</a>
+                <a href="#research" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Deep Dives</a>
+                <a href="weq50.html" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">WEQ50 Index</a>
+                <a href="#subscribe" class="bg-emerald-500 hover:bg-emerald-600 text-black font-bold py-2 px-5 rounded-md transition-colors text-sm">
+                    SUBSCRIBE
+                </a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4 space-y-3">
+            <a href="market-intel.html" class="block text-gray-300 hover:text-white transition-colors">Market Intel</a>
+            <a href="#research" class="block text-gray-300 hover:text-white transition-colors">Deep Dives</a>
+            <a href="weq50.html" class="block text-gray-300 hover:text-white transition-colors">WEQ50 Index</a>
+            <a href="#subscribe" class="block bg-emerald-500 mt-2 text-center text-black font-bold py-2 px-5 rounded-md transition-colors">
+                SUBSCRIBE
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="relative py-20 md:py-32 bg-gray-900 text-center text-white overflow-hidden">
+             <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image: url('images/hero-bg.jpg');" onerror="this.parentElement.style.backgroundColor = '#111827';"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-wider">The Bloomberg of Bud.</h1>
+                <p class="mt-6 text-lg md:text-xl max-w-3xl mx-auto text-gray-300">We cut through the noise to deliver the unassailable edge in cannabis intelligence. For the high-achieving investor.</p>
+                <div class="mt-12">
+                    <a href="market-intel.html" class="bg-emerald-500 hover:bg-emerald-600 text-black font-bold py-3 px-8 rounded-md transition-colors">
+                        Explore Our Intelligence
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Latest Intel Section -->
+        <section id="intel" class="py-24 bg-light">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="font-display text-4xl md:text-5xl font-bold">Latest Intelligence</h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Actionable insights from the front lines of the global cannabis market.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Article 1 -->
+                    <div class="bg-gray-900 rounded-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                        <img src="images/article-regulation.jpg" alt="Regulatory News" class="w-full h-56 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/1F2937/34D399?text=Regulation';">
+                        <div class="p-6">
+                            <span class="text-xs font-bold uppercase accent-purple-text">Regulation</span>
+                            <h3 class="font-display text-2xl font-bold mt-2">SAFER Banking Hits a Snag: What the Delay Means for MSO Valuations</h3>
+                            <p class="text-gray-400 mt-3 text-sm">The political gridlock continues. We analyze the ripple effects on capital access and why secondary markets may feel the pain first.</p>
+                            <a href="#" class="inline-block mt-4 text-emerald-400 hover:text-emerald-300 font-semibold text-sm">Read Analysis <i class="fas fa-arrow-right ml-1"></i></a>
+                        </div>
+                    </div>
+                    <!-- Article 2 -->
+                    <div class="bg-gray-900 rounded-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                        <img src="images/article-earnings.jpg" alt="Earnings Analysis" class="w-full h-56 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/1F2937/F9FAFB?text=Earnings';">
+                        <div class="p-6">
+                            <span class="text-xs font-bold uppercase accent-green-text">Earnings</span>
+                            <h3 class="font-display text-2xl font-bold mt-2">Trulieve vs. Green Thumb: A Q3 Balance Sheet Showdown</h3>
+                            <p class="text-gray-400 mt-3 text-sm">Beyond the revenue figures, we dissect the debt covenants, cash flow, and inventory turnover that will determine the long-term winner.</p>
+                             <a href="#" class="inline-block mt-4 text-emerald-400 hover:text-emerald-300 font-semibold text-sm">Read Analysis <i class="fas fa-arrow-right ml-1"></i></a>
+                        </div>
+                    </div>
+                    <!-- Article 3 -->
+                    <div class="bg-gray-900 rounded-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                        <img src="images/article-international.jpg" alt="International Market News" class="w-full h-56 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/1F2937/8B5CF6?text=International';">
+                        <div class="p-6">
+                            <span class="text-xs font-bold uppercase text-yellow-400">International</span>
+                            <h3 class="font-display text-2xl font-bold mt-2">Germany's 'Pillar 2' is Live. Is It an Investor Trap?</h3>
+                            <p class="text-gray-400 mt-3 text-sm">Navigating the complex landscape of Germany's social clubs and the limited commercial opportunities. We separate hype from reality.</p>
+                             <a href="#" class="inline-block mt-4 text-emerald-400 hover:text-emerald-300 font-semibold text-sm">Read Analysis <i class="fas fa-arrow-right ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Research / Deep Dives Section -->
+        <section id="research" class="py-24 bg-gray-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="font-display text-4xl md:text-5xl font-bold">Institutional Deep Dives</h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Our premium research reports for serious operators and capital allocators.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <!-- Report 1 -->
+                    <a href="report-ancillary.html" class="block border-2 border-color rounded-lg p-8 flex items-center space-x-6 bg-light hover:border-emerald-500 transition-colors group">
+                        <i class="fas fa-file-pdf text-5xl text-purple-400 group-hover:text-purple-300 transition-colors"></i>
+                        <div>
+                            <h4 class="font-display text-xl font-bold">The Ancillary Tech Gold Rush</h4>
+                            <p class="text-sm text-gray-400 mt-1">A 40-page report on the undervalued SaaS, hardware, and compliance startups powering the industry.</p>
+                        </div>
+                    </a>
+                    <!-- Report 2 -->
+                     <a href="#" class="block border-2 border-color rounded-lg p-8 flex items-center space-x-6 bg-light hover:border-emerald-500 transition-colors group">
+                        <i class="fas fa-file-alt text-5xl text-green-400 group-hover:text-green-300 transition-colors"></i>
+                        <div>
+                            <h4 class="font-display text-xl font-bold">2026 M&A Outlook</h4>
+                            <p class="text-sm text-gray-400 mt-1">Identifying the next wave of consolidation targets and predicting acquisition premiums in a post-rescheduling world.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- WEQ50 Index Section -->
+        <section id="weq50" class="py-24 bg-light">
+             <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="font-display text-4xl md:text-5xl font-bold">The <span class="accent-green-text">WEQ50</span> Index</h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Our proprietary index tracking the 50 most influential cannabis companies globally. The true pulse of the market.</p>
+                </div>
+                <a href="weq50.html" class="block bg-gray-900 p-8 rounded-lg max-w-5xl mx-auto group hover:border-emerald-500 border border-transparent transition-colors">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-display text-3xl font-bold">WEQ50</h3>
+                        <div class="text-right">
+                           <p id="homepageIndexValue" class="text-4xl font-bold text-emerald-400">1,204.77</p>
+                           <p id="homepageIndexChange" class="text-red-500 font-semibold">-12.31 (-1.01%) Today</p>
+                        </div>
+                    </div>
+                     <div class="mt-8 h-64 w-full bg-gray-800 rounded-md relative">
+                        <canvas id="homepageChart"></canvas>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+
+        <!-- Subscription CTA -->
+        <section id="subscribe" class="py-24 bg-gray-900">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="font-display text-4xl md:text-5xl font-bold">BECOME AN INSIDER.</h2>
+                <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Join a community of serious investors. Get our weekly intelligence brief—the one the pros actually read.</p>
+                <form class="mt-8 max-w-lg mx-auto flex flex-col sm:flex-row gap-4">
+                    <input type="email" placeholder="your.email@domain.com" class="w-full px-4 py-3 rounded-md bg-gray-800 border-color focus:ring-2 focus:ring-emerald-500 focus:outline-none text-white" required>
+                    <button type="submit" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-black font-bold py-3 px-8 rounded-md transition-colors whitespace-nowrap">
+                        Subscribe Me!
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-black py-16">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- About -->
+                <div class="col-span-1 md:col-span-2">
+                    <h4 class="font-display text-xl font-bold mb-4">WEED EQUITY</h4>
+                    <p class="text-gray-400 text-sm max-w-md">Weed Equity has been delivering raw, unfiltered intelligence for the cannabis industry since 2015.</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#intel" class="text-gray-400 hover:text-white">Market Intel</a></li>
+                        <li><a href="#research" class="text-gray-400 hover:text-white">Deep Dives</a></li>
+                        <li><a href="weq50.html" class="text-gray-400 hover:text-white">WEQ50 Index</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Social -->
+                 <div>
+                    <h4 class="text-lg font-semibold mb-4">Reach Us</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><i class="fas fa-envelope mr-2"></i> intel@weedequity.com</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i> 999 Canada Pl, Vancouver, BC V6C 3E1</li>
+                    </ul>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-color pt-8 text-center text-sm text-gray-500">
+                <p>&copy; 2025 Weed Equity. All Rights Reserved. This is not financial advice.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- MOBILE MENU SCRIPT ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- HOMEPAGE CHART SCRIPT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('homepageChart')?.getContext('2d');
+            if (!ctx) return;
+
+            // --- We use the last 7 days of data for the homepage mini-chart ---
+            const chartData = [1200, 1195, 1202, 1210, 1217, 1204.77];
+            
+            const indexValueEl = document.getElementById('homepageIndexValue');
+            const indexChangeEl = document.getElementById('homepageIndexChange');
+
+            const currentValue = chartData[chartData.length - 1];
+            const prevValue = chartData[chartData.length - 2];
+            const change = currentValue - prevValue;
+            const percentChange = (change / prevValue) * 100;
+
+            indexValueEl.textContent = currentValue.toFixed(2);
+            indexChangeEl.textContent = `${change.toFixed(2)} (${percentChange.toFixed(2)}%) Today`;
+            indexChangeEl.classList.toggle('text-green-500', change >= 0);
+            indexChangeEl.classList.toggle('text-red-500', change < 0);
+
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, 250);
+            gradient.addColorStop(0, 'rgba(52, 211, 153, 0.3)');
+            gradient.addColorStop(1, 'rgba(52, 211, 153, 0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array(chartData.length).fill(''), // No labels for a clean look
+                    datasets: [{
+                        label: 'WEQ50 Index',
+                        data: chartData,
+                        borderColor: 'rgb(52, 211, 153)',
+                        backgroundColor: gradient,
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.4,
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false } // Disable tooltips for mini-chart
+                    },
+                    scales: {
+                        y: { display: false }, // Hide Y-axis
+                        x: { display: false }  // Hide X-axis
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
