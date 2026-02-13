@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Weed Equity</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+
+  <div class="bg-gray-800 p-8 rounded-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">Weed Equity Login</h1>
+
+    <input id="email" type="email"
+      placeholder="Email"
+      class="w-full mb-4 p-3 rounded bg-gray-900 text-white border border-gray-700" />
+
+    <input id="password" type="password"
+      placeholder="Password"
+      class="w-full mb-4 p-3 rounded bg-gray-900 text-white border border-gray-700" />
+
+    <div class="flex gap-3">
+      <button id="signup"
+        class="flex-1 bg-emerald-500 text-black font-bold py-2 rounded">
+        Sign Up
+      </button>
+
+      <button id="login"
+        class="flex-1 bg-white text-black font-bold py-2 rounded">
+        Log In
+      </button>
+    </div>
+
+    <button id="logout"
+      class="w-full mt-4 border border-gray-600 py-2 rounded">
+      Log Out
+    </button>
+
+    <p id="status" class="mt-4 text-sm text-gray-300"></p>
+  </div>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabaseClient.js"></script>
+
+  <script>
+    const sb = window.WE.sb;
+    const $ = id => document.getElementById(id);
+
+    async function refreshUser() {
+      const { data } = await sb.auth.getUser();
+      $("status").textContent = data?.user
+        ? `Logged in as ${data.user.email}`
+        : "Not logged in";
+    }
+
+    $("signup").onclick = async () => {
+      const email = $("email").value.trim();
+      const password = $("password").value;
+
+      const { error } = await sb.auth.signUp({ email, password });
+
+      $("status").textContent = error
+        ? error.message
+        : "Signed up successfully!";
+      refreshUser();
+    };
+
+    $("login").onclick = async () => {
+      const email = $("email").value.trim();
+      const password = $("password").value;
+
+      const { error } = await sb.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      $("status").textContent = error
+        ? error.message
+        : "Logged in!";
+      refreshUser();
+    };
+
+    $("logout").onclick = async () => {
+      await sb.auth.signOut();
+      $("status").textContent = "Logged out.";
+      refreshUser();
+    };
+
+    refreshUser();
+  </script>
+
+</body>
+</html>
