@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GreenView | Weed Equity</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card: rgba(17,24,39,0.78);
+      --border: rgba(255,255,255,0.08);
+      --green: #34D399;
+      --purple:#8B5CF6;
+      --red: #ef4444;
+    }
+    body{
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(52,211,153,0.10), transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.10), transparent 45%),
+        var(--bg);
+      color:#f9fafb;
+      overflow-x:hidden;
+    }
+
+    /* Animated grid */
+    .grid-bg{
+      position:fixed; inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 70px 70px;
+      animation: gridMove 55s linear infinite;
+      z-index:0;
+      pointer-events:none;
+    }
+    @keyframes gridMove{
+      from { background-position: 0 0; }
+      to   { background-position: 70px 70px; }
+    }
+
+    /* Slow smoke (pure CSS, subtle) */
+    .smoke-wrap{
+      position:fixed; inset:-20%;
+      z-index:0;
+      pointer-events:none;
+      filter: blur(10px);
+      opacity:0.28;
+      mix-blend-mode: screen;
+    }
+    .smoke{
+      position:absolute;
+      width: 60vmax; height: 60vmax;
+      background: radial-gradient(circle at 30% 30%, rgba(52,211,153,0.18), transparent 55%),
+                  radial-gradient(circle at 70% 60%, rgba(139,92,246,0.14), transparent 60%),
+                  radial-gradient(circle at 55% 40%, rgba(255,255,255,0.06), transparent 55%);
+      border-radius: 50%;
+      animation: drift 34s ease-in-out infinite;
+    }
+    .smoke:nth-child(2){ width: 70vmax; height: 70vmax; left: 40%; top: 30%; animation-duration: 46s; opacity:0.22;}
+    .smoke:nth-child(3){ width: 55vmax; height: 55vmax; left: 10%; top: 55%; animation-duration: 40s; opacity:0.18;}
+    @keyframes drift{
+      0%   { transform: translate3d(-5%, -3%, 0) scale(1); }
+      50%  { transform: translate3d(8%, 6%, 0) scale(1.05); }
+      100% { transform: translate3d(-5%, -3%, 0) scale(1); }
+    }
+
+    /* Ticker tape */
+    .tape{
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.22);
+      overflow:hidden;
+    }
+    .tape-track{
+      display:flex;
+      gap: 2.5rem;
+      white-space: nowrap;
+      animation: tapeScroll 26s linear infinite;
+      padding: 10px 0;
+    }
+    @keyframes tapeScroll{
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .pill{
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.22);
+    }
+    .card{
+      background: var(--card);
+      border:1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+
+    /* Heatmap tiles */
+    .tile{
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(15,23,42,0.55);
+      position:relative;
+      overflow:hidden;
+      transition: transform 160ms ease, border-color 160ms ease;
+      user-select:none;
+    }
+    .tile:hover{ transform: translateY(-2px); border-color: rgba(52,211,153,0.38); }
+    .tile::after{
+      content:"";
+      position:absolute; inset:-30%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.11), transparent 55%);
+      opacity:0.35;
+      transform: rotate(10deg);
+    }
+
+    .btn{
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.22);
+    }
+    .btn:hover{ border-color: rgba(52,211,153,0.38); }
+    .font-display{ font-family:'Playfair Display', serif; }
+  </style>
+</head>
+
+<body class="min-h-screen">
+  <div class="grid-bg"></div>
+
+  <div class="smoke-wrap">
+    <div class="smoke" style="left:-10%; top:-5%;"></div>
+    <div class="smoke"></div>
+    <div class="smoke" style="left:55%; top:-15%;"></div>
+  </div>
+
+  <div class="relative z-10">
+    <header class="px-6 py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">WEED EQUITY</a>
+        <span class="pill text-xs px-3 py-1 rounded-full text-gray-300">GreenView</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="userEmail" class="text-sm text-gray-400"></span>
+        <a href="dashboard.html" class="btn text-sm px-3 py-2 rounded-lg">Dashboard</a>
+        <button id="logoutBtn" class="btn text-sm px-3 py-2 rounded-lg">Logout</button>
+      </div>
+    </header>
+
+    <!-- ticker tape -->
+    <div class="tape">
+      <div class="tape-track" id="tapeTrack">
+        <!-- duplicated in JS for seamless scroll -->
+      </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-6 py-10">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+        <div>
+          <h1 class="font-display text-5xl md:text-6xl font-black tracking-tight">
+            The Trading Floor for Cannabis.
+          </h1>
+          <p class="mt-3 text-gray-300 max-w-2xl">
+            Pick your 5-ticker “basket” and watch the board breathe with real-time price action.
+            This is your market pulse — built for Weed Equity.
+          </p>
+        </div>
+
+        <div class="card rounded-2xl p-5 w-full lg:w-[420px]">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs uppercase tracking-wider text-gray-400">Your Basket Score</div>
+              <div class="font-display text-4xl font-black mt-1" id="basketScore">—</div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs uppercase tracking-wider text-gray-400">Last Update</div>
+              <div class="text-sm font-semibold" id="lastUpdate">—</div>
+              <div class="text-xs text-gray-400 mt-1">Refresh in <span id="timer">—</span>s</div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <div class="text-xs uppercase tracking-wider text-gray-400 mb-2">Selected (max 5)</div>
+            <div id="pickedRow" class="flex flex-wrap gap-2"></div>
+            <div class="mt-4 flex gap-2">
+              <button id="clearPicks" class="btn text-sm px-3 py-2 rounded-lg w-1/2">Clear</button>
+              <button id="refreshNow" class="btn text-sm px-3 py-2 rounded-lg w-1/2">Refresh</button>
+            </div>
+          </div>
+
+          <div class="mt-4 text-xs text-gray-400">
+            Tip: Clicking a tile adds/removes it from your basket. Basket score is the sum of % changes.
+          </div>
+        </div>
+      </div>
+
+      <!-- Heatmap -->
+      <section class="mt-10 card rounded-2xl p-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-semibold">Live Heatmap Board</h2>
+            <p class="text-sm text-gray-400 mt-1">
+              Watchlist-driven. If your watchlist is empty, we load a default cannabis tape.
+            </p>
+          </div>
+          <div class="pill text-xs px-3 py-2 rounded-lg text-gray-300">
+            Symbols: <span id="symbolCount" class="text-white font-semibold">—</span>
+          </div>
+        </div>
+
+        <div id="hmError" class="hidden mt-4 text-sm text-red-300"></div>
+
+        <div id="heatmapGrid" class="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+          <!-- tiles -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabaseClient.js"></script>
+
+  <script>
+    const sb = window.WE.sb;
+
+    const DEFAULT_TICKERS = [
+      "MSOS","MJ","TLRY","CGC","CRON","GTBIF","TCNNF","CURLF","VRNOF","AYRWF",
+      "TSNDF","JUSHF","MRMD","CBSTF","IMCC","HITI","SNDL","MAPS","GRWG","HYFM"
+    ];
+
+    // Pick list (game mechanic)
+    const picks = new Set(); // up to 5
+    let currentQuotes = {};  // symbol -> quote
+
+    function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
+    function sign(n){ const x=Number(n); if(Number.isNaN(x)) return ""; return x>0?"+":""; }
+    function fmtTime(ts=Date.now()){
+      try { return new Date(ts).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"}); }
+      catch { return "—"; }
+    }
+    function tileBgFromPct(pct){
+      const p = clamp(pct, -12, 12);
+      const abs = Math.abs(p);
+      const alpha = 0.16 + (abs/12)*0.34;
+      return p >= 0 ? `rgba(52,211,153,${alpha})` : `rgba(239,68,68,${alpha})`;
+    }
+
+    async function protectRoute(){
+      const { data } = await sb.auth.getUser();
+      if (!data.user){
+        window.location.href = "login.html?next=greenview.html";
+        return null;
+      }
+      document.getElementById("userEmail").textContent = data.user.email;
+      return data.user;
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await sb.auth.signOut();
+      window.location.href = "index.html";
+    });
+
+    async function loadWatchlistSymbols(userId){
+      const { data, error } = await sb
+        .from("watchlists")
+        .select("symbol")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (error) return [];
+      return (data || []).map(r => r.symbol);
+    }
+
+    async function fetchQuotes(symbols){
+      const qs = encodeURIComponent(symbols.join(","));
+      const r = await fetch(`/api/quotes?symbols=${qs}`, { cache: "no-store" });
+      if(!r.ok) throw new Error(`Quotes fetch failed (${r.status})`);
+      return r.json();
+    }
+
+    function renderTape(symbols){
+      const track = document.getElementById("tapeTrack");
+      // Duplicate list for seamless scroll
+      const items = symbols.map(s => `<span class="text-xs text-gray-300"><span style="color:var(--green);font-weight:700">${s}</span> • LIVE</span>`).join("");
+      track.innerHTML = items + `<span class="opacity-40">—</span>` + items;
+    }
+
+    function renderPicked(){
+      const row = document.getElementById("pickedRow");
+      row.innerHTML = "";
+      const list = Array.from(picks);
+
+      if(!list.length){
+        row.innerHTML = `<span class="pill text-xs px-3 py-2 rounded-lg text-gray-300">Pick up to 5 tickers…</span>`;
+        return;
+      }
+
+      for(const sym of list){
+        const q = currentQuotes?.[sym];
+        const pct = Number(q?.dp ?? 0);
+        const chip = document.createElement("button");
+        chip.className = "pill text-xs px-3 py-2 rounded-lg flex items-center gap-2";
+        chip.innerHTML = `
+          <span class="font-semibold text-white">${sym}</span>
+          <span class="text-white/80">${sign(pct)}${pct.toFixed(2)}%</span>
+          <span class="text-gray-400">✕</span>
+        `;
+        chip.addEventListener("click", () => {
+          picks.delete(sym);
+          renderPicked();
+          updateScore();
+          // update tile selection state
+          document.querySelectorAll(`[data-sym="${sym}"]`).forEach(el => el.classList.remove("ring-2","ring-emerald-400"));
+        });
+        row.appendChild(chip);
+      }
+    }
+
+    function updateScore(){
+      const scoreEl = document.getElementById("basketScore");
+      const list = Array.from(picks);
+      if(!list.length){
+        scoreEl.textContent = "—";
+        scoreEl.style.color = "white";
+        return;
+      }
+      let sum = 0;
+      for(const sym of list){
+        const pct = Number(currentQuotes?.[sym]?.dp ?? 0);
+        if(!Number.isNaN(pct)) sum += pct;
+      }
+      scoreEl.textContent = `${sign(sum)}${sum.toFixed(2)}%`;
+      scoreEl.style.color = sum >= 0 ? "var(--green)" : "var(--red)";
+    }
+
+    function renderHeatmap(quotesObj, symbols){
+      const errEl = document.getElementById("hmError");
+      errEl.classList.add("hidden");
+      errEl.textContent = "";
+
+      const grid = document.getElementById("heatmapGrid");
+      grid.innerHTML = "";
+
+      const data = quotesObj?.data || {};
+      currentQuotes = data;
+
+      document.getElementById("symbolCount").textContent = symbols.length;
+
+      for (const sym of symbols){
+        const q = data[sym] || {};
+        const pct = Number(q?.dp ?? 0);
+        const price = Number(q?.c ?? 0);
+        const chg = Number(q?.d ?? 0);
+
+        const tile = document.createElement("div");
+        tile.className = "tile rounded-xl p-3 cursor-pointer";
+        tile.style.background = tileBgFromPct(pct);
+        tile.dataset.sym = sym;
+
+        // subtle scaling by movement
+        const scale = 1 + (clamp(Math.abs(pct),0,12) / 12) * 0.06;
+        tile.style.transform = `scale(${scale})`;
+
+        tile.innerHTML = `
+          <div class="relative z-10">
+            <div class="flex items-baseline justify-between">
+              <div class="font-bold text-white">${sym}</div>
+              <div class="text-xs text-white/80">${sign(pct)}${pct.toFixed(2)}%</div>
+            </div>
+            <div class="mt-1 text-sm text-white/90">$${price.toFixed(2)}</div>
+            <div class="text-xs text-white/70">${sign(chg)}${chg.toFixed(2)}</div>
+          </div>
+        `;
+
+        // show selected
+        if(picks.has(sym)){
+          tile.classList.add("ring-2","ring-emerald-400");
+        }
+
+        tile.addEventListener("click", () => {
+          if(picks.has(sym)){
+            picks.delete(sym);
+            tile.classList.remove("ring-2","ring-emerald-400");
+          } else {
+            if(picks.size >= 5) return; // max 5
+            picks.add(sym);
+            tile.classList.add("ring-2","ring-emerald-400");
+          }
+          renderPicked();
+          updateScore();
+        });
+
+        grid.appendChild(tile);
+      }
+
+      document.getElementById("lastUpdate").textContent = fmtTime();
+      renderPicked();
+      updateScore();
+    }
+
+    let interval = null;
+    let countdown = null;
+    let secondsLeft = 30;
+
+    function startTimer(){
+      const timerEl = document.getElementById("timer");
+      secondsLeft = 30;
+      timerEl.textContent = secondsLeft;
+
+      if(countdown) clearInterval(countdown);
+      countdown = setInterval(() => {
+        secondsLeft -= 1;
+        if(secondsLeft <= 0) secondsLeft = 30;
+        timerEl.textContent = secondsLeft;
+      }, 1000);
+    }
+
+    async function refreshBoard(symbols){
+      const errEl = document.getElementById("hmError");
+      try{
+        const json = await fetchQuotes(symbols);
+        renderHeatmap(json, symbols);
+      } catch(e){
+        errEl.classList.remove("hidden");
+        errEl.textContent = e?.message || "Heatmap failed.";
+      }
+    }
+
+    document.getElementById("clearPicks").addEventListener("click", () => {
+      picks.clear();
+      renderPicked();
+      updateScore();
+      document.querySelectorAll(`[data-sym]`).forEach(el => el.classList.remove("ring-2","ring-emerald-400"));
+    });
+
+    document.getElementById("refreshNow").addEventListener("click", async () => {
+      const { data } = await sb.auth.getUser();
+      if(!data.user) return;
+      const syms = await loadWatchlistSymbols(data.user.id);
+      const symbols = syms.length ? syms : DEFAULT_TICKERS;
+      await refreshBoard(symbols);
+      startTimer();
+    });
+
+    (async function init(){
+      const user = await protectRoute();
+      if(!user) return;
+
+      const watchSyms = await loadWatchlistSymbols(user.id);
+      const symbols = watchSyms.length ? watchSyms : DEFAULT_TICKERS;
+
+      renderTape(symbols);
+      await refreshBoard(symbols);
+      startTimer();
+
+      if(interval) clearInterval(interval);
+      interval = setInterval(async () => {
+        const syms = await loadWatchlistSymbols(user.id);
+        const list = syms.length ? syms : DEFAULT_TICKERS;
+        renderTape(list);
+        await refreshBoard(list);
+        startTimer();
+      }, 30000);
+    })();
+  </script>
+</body>
+</html>
