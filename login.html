@@ -1,95 +1,384 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | Weed Equity</title>
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts to match your site -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #111827;
+      --bg-light: #1F2937;
+      --text-main: #F9FAFB;
+      --text-secondary: #9CA3AF;
+      --accent-green: #34D399;
+      --accent-purple: #8B5CF6;
+      --border-color: #374151;
+    }
+    body { background: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x:hidden; }
+    .font-display { font-family: 'Playfair Display', serif; }
+
+    /* animated grid */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(52,211,153,0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(139,92,246,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.35;
+      transform: translateZ(0);
+      pointer-events:none;
+      mask-image: radial-gradient(circle at 50% 35%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 55%, rgba(0,0,0,0) 85%);
+      animation: gridDrift 16s linear infinite;
+    }
+    @keyframes gridDrift {
+      0% { background-position: 0 0, 0 0; }
+      100% { background-position: 180px 120px, 120px 180px; }
+    }
+
+    /* glow blobs */
+    .blob {
+      position: fixed;
+      width: 520px;
+      height: 520px;
+      border-radius: 9999px;
+      filter: blur(50px);
+      opacity: 0.22;
+      pointer-events:none;
+      transform: translateZ(0);
+      mix-blend-mode: screen;
+    }
+    .blob.green { background: rgba(52,211,153,0.75); left: -140px; top: -120px; }
+    .blob.purple { background: rgba(139,92,246,0.70); right: -180px; top: 120px; }
+    .blob.cyan { background: rgba(99,102,241,0.65); left: 20%; bottom: -220px; }
+
+    /* floating ticker chips */
+    .ticker-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .ticker {
+      position: absolute;
+      padding: 10px 14px;
+      border-radius: 9999px;
+      border: 1px solid rgba(55,65,81,0.8);
+      background: rgba(17,24,39,0.65);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 0 1px rgba(52,211,153,0.08), 0 0 18px rgba(139,92,246,0.10);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      white-space: nowrap;
+      transform: translateZ(0);
+      animation: floatY var(--dur) ease-in-out infinite, driftX var(--dur2) linear infinite;
+      opacity: 0.85;
+    }
+    .ticker b { color: rgba(249,250,251,0.92); font-weight: 700; }
+    .ticker span {
+      font-weight: 700;
+      color: var(--accent-green);
+    }
+    .ticker .down { color: #f87171; } /* red-400 */
+    .ticker .pill {
+      padding: 4px 8px;
+      border-radius: 9999px;
+      border: 1px solid rgba(52,211,153,0.22);
+      background: rgba(52,211,153,0.10);
+      color: rgba(52,211,153,0.95);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+    }
+
+    @keyframes floatY {
+      0%,100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(0, -18px, 0); }
+    }
+    @keyframes driftX {
+      0% { margin-left: -40px; }
+      100% { margin-left: 80px; }
+    }
+
+    /* card */
+    .card {
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(31,41,55,0.62);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 0 0 1px rgba(52,211,153,0.10), 0 30px 90px rgba(0,0,0,0.55);
+    }
+
+    /* primary button glow */
+    .btn-primary {
+      background: var(--accent-green);
+      color: #000;
+      font-weight: 800;
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.03); }
+    .btn-primary:active { transform: translateY(0px); }
+
+    .link { color: rgba(52,211,153,0.95); }
+    .link:hover { color: rgba(52,211,153,0.82); }
+
+    /* subtle scanline */
+    .scanline {
+      position: fixed;
+      inset: 0;
+      pointer-events:none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.02),
+        rgba(255,255,255,0.02) 1px,
+        rgba(0,0,0,0) 5px,
+        rgba(0,0,0,0) 10px
+      );
+      opacity: 0.10;
+      mix-blend-mode: overlay;
+    }
+
+    /* reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      .grid-bg, .ticker, .blob { animation: none !important; }
+    }
+  </style>
 </head>
 
-<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+<body>
+  <!-- Background -->
+  <div class="grid-bg"></div>
+  <div class="blob green"></div>
+  <div class="blob purple"></div>
+  <div class="blob cyan"></div>
+  <div class="scanline"></div>
 
-  <div class="bg-gray-800 p-8 rounded-lg w-full max-w-md">
-    <h1 class="text-2xl font-bold mb-6 text-center">Weed Equity Login</h1>
+  <div class="ticker-layer" id="tickerLayer" aria-hidden="true"></div>
 
-    <input id="email" type="email"
-      placeholder="Email"
-      class="w-full mb-4 p-3 rounded bg-gray-900 text-white border border-gray-700" />
+  <!-- Content -->
+  <main class="min-h-screen flex items-center justify-center px-6 py-16 relative">
+    <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+      <!-- Left: brand message -->
+      <section>
+        <a href="index.html" class="inline-flex items-center gap-2 text-gray-300 hover:text-white transition-colors">
+          <span class="text-xl">←</span>
+          <span class="text-sm font-semibold">Back to Weed Equity</span>
+        </a>
 
-    <input id="password" type="password"
-      placeholder="Password"
-      class="w-full mb-4 p-3 rounded bg-gray-900 text-white border border-gray-700" />
+        <h1 class="font-display text-5xl md:text-6xl font-black uppercase tracking-wider mt-8">
+          WEED <span style="color:var(--accent-green)">EQUITY</span>
+        </h1>
+        <p class="mt-5 text-gray-300 max-w-md">
+          Access premium intelligence, save reports, track watchlists, and play <span class="font-semibold">GreenView</span>.
+          Log in to unlock your edge.
+        </p>
 
-    <div class="flex gap-3">
-      <button id="signup"
-        class="flex-1 bg-emerald-500 text-black font-bold py-2 rounded">
-        Sign Up
-      </button>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <span class="px-3 py-2 rounded-full text-xs font-bold tracking-wider border border-gray-700 bg-gray-900/40">
+            WATCHLISTS
+          </span>
+          <span class="px-3 py-2 rounded-full text-xs font-bold tracking-wider border border-gray-700 bg-gray-900/40">
+            SAVED ARTICLES
+          </span>
+          <span class="px-3 py-2 rounded-full text-xs font-bold tracking-wider border border-gray-700 bg-gray-900/40">
+            GREENVIEW
+          </span>
+        </div>
+      </section>
 
-      <button id="login"
-        class="flex-1 bg-white text-black font-bold py-2 rounded">
-        Log In
-      </button>
+      <!-- Right: auth card -->
+      <section class="card rounded-2xl p-8">
+        <div class="flex items-center justify-between">
+          <h2 class="font-display text-2xl font-bold">Sign in</h2>
+          <div class="text-xs text-gray-400">
+            <span id="modeLabel">Existing user</span>
+          </div>
+        </div>
+
+        <!-- Mode toggle -->
+        <div class="mt-5 grid grid-cols-2 bg-gray-900/50 rounded-xl p-1 border border-gray-700">
+          <button id="modeLogin" class="py-2 rounded-lg text-sm font-semibold">Log in</button>
+          <button id="modeSignup" class="py-2 rounded-lg text-sm font-semibold text-gray-300">Sign up</button>
+        </div>
+
+        <div class="mt-6 space-y-4">
+          <div>
+            <label class="text-sm text-gray-300">Email</label>
+            <input id="email" type="email" class="mt-1 w-full p-3 rounded-lg bg-gray-900/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="you@domain.com" />
+          </div>
+          <div>
+            <label class="text-sm text-gray-300">Password</label>
+            <input id="password" type="password" class="mt-1 w-full p-3 rounded-lg bg-gray-900/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="••••••••" />
+          </div>
+
+          <button id="submitBtn" class="btn-primary w-full py-3 rounded-lg">
+            Continue
+          </button>
+
+          <button id="logoutBtn" class="w-full py-3 rounded-lg border border-gray-700 hover:border-gray-500 transition-colors text-gray-200">
+            Log out
+          </button>
+
+          <div id="status" class="text-sm text-gray-300"></div>
+        </div>
+
+        <p class="mt-6 text-xs text-gray-400">
+          By continuing, you agree this is not financial advice. Your account is secured via Supabase.
+        </p>
+      </section>
     </div>
-
-    <button id="logout"
-      class="w-full mt-4 border border-gray-600 py-2 rounded">
-      Log Out
-    </button>
-
-    <p id="status" class="mt-4 text-sm text-gray-300"></p>
-  </div>
+  </main>
 
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supabaseClient.js"></script>
+  <script src="assets/js/authNav.js"></script>
 
   <script>
     const sb = window.WE.sb;
-    const $ = id => document.getElementById(id);
+    const $ = (id) => document.getElementById(id);
+
+    // --- UI state
+    let mode = "login"; // or "signup"
+    const setMode = (next) => {
+      mode = next;
+      const active = "bg-gray-800 text-white border border-gray-700";
+      const inactive = "text-gray-300";
+
+      $("modeLogin").className = "py-2 rounded-lg text-sm font-semibold " + (mode === "login" ? active : inactive);
+      $("modeSignup").className = "py-2 rounded-lg text-sm font-semibold " + (mode === "signup" ? active : inactive);
+
+      $("modeLabel").textContent = mode === "login" ? "Existing user" : "Create account";
+      $("submitBtn").textContent = mode === "login" ? "Log in" : "Create account";
+      $("status").textContent = "";
+    };
+
+    $("modeLogin").onclick = () => setMode("login");
+    $("modeSignup").onclick = () => setMode("signup");
+    setMode("login");
+
+    const setStatus = (msg, isError=false) => {
+      $("status").textContent = msg;
+      $("status").className = "text-sm " + (isError ? "text-red-300" : "text-gray-300");
+    };
+
+    const setLoading = (loading) => {
+      $("submitBtn").disabled = loading;
+      $("submitBtn").style.opacity = loading ? "0.75" : "1";
+      $("submitBtn").textContent = loading ? "Working..." : (mode === "login" ? "Log in" : "Create account");
+    };
 
     async function refreshUser() {
       const { data } = await sb.auth.getUser();
-      $("status").textContent = data?.user
-        ? `Logged in as ${data.user.email}`
-        : "Not logged in";
+      if (data?.user) {
+        setStatus(`Logged in as ${data.user.email}`);
+      } else {
+        setStatus("Not logged in");
+      }
     }
 
-    $("signup").onclick = async () => {
+    $("submitBtn").onclick = async () => {
       const email = $("email").value.trim();
       const password = $("password").value;
+      if (!email || !password) return setStatus("Enter email + password.", true);
 
-      const { error } = await sb.auth.signUp({ email, password });
-
-      $("status").textContent = error
-        ? error.message
-        : "Signed up successfully!";
-      refreshUser();
+      setLoading(true);
+      try {
+        let res;
+        if (mode === "signup") {
+          res = await sb.auth.signUp({ email, password });
+        } else {
+          res = await sb.auth.signInWithPassword({ email, password });
+        }
+        if (res.error) return setStatus(res.error.message, true);
+        setStatus(mode === "signup" ? "Account created. Check email if confirmation is required." : "Logged in!");
+        await refreshUser();
+        const params = new URLSearchParams(window.location.search);
+        const next = params.get("next");
+        if (next) window.location.href = next;
+      } finally {
+        setLoading(false);
+      }
     };
 
-    $("login").onclick = async () => {
-      const email = $("email").value.trim();
-      const password = $("password").value;
-
-      const { error } = await sb.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      $("status").textContent = error
-        ? error.message
-        : "Logged in!";
-      refreshUser();
-    };
-
-    $("logout").onclick = async () => {
+    $("logoutBtn").onclick = async () => {
       await sb.auth.signOut();
-      $("status").textContent = "Logged out.";
+      setStatus("Logged out.");
       refreshUser();
     };
 
     refreshUser();
-  </script>
 
+    // --- Floating tickers
+    const tickers = [
+      ["MSOS", "+1.42%"], ["GTBIF", "+0.78%"], ["TCNNF", "-0.55%"], ["CURLF", "+2.11%"],
+      ["CRLBF", "-1.04%"], ["VRNOF", "+0.36%"], ["TSNDF", "+0.91%"], ["HITI", "-0.22%"],
+      ["CGC", "+0.63%"], ["TLRY", "-0.48%"], ["SNDL", "+0.19%"], ["IIPR", "-0.31%"],
+      ["SAFE", "BANKING"], ["DEA", "RESCHED"], ["FL", "BALLOT"], ["NJ", "ADULT USE"]
+    ];
+
+    const layer = document.getElementById("tickerLayer");
+
+    function makeTicker(i) {
+      const el = document.createElement("div");
+      const [sym, chg] = tickers[i % tickers.length];
+
+      const isPercent = chg.includes("%");
+      const isDown = isPercent && chg.includes("-");
+      const pillText = isPercent ? (isDown ? "DOWN" : "UP") : "NEWS";
+
+      el.className = "ticker";
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.top = Math.random() * 100 + "vh";
+      el.style.setProperty("--dur", (10 + Math.random() * 10) + "s");
+      el.style.setProperty("--dur2", (18 + Math.random() * 18) + "s");
+
+      el.innerHTML = `
+        <b>${sym}</b>
+        ${isPercent ? `<span class="${isDown ? "down" : ""}">${chg}</span>` : `<span style="color: var(--accent-purple)">${chg}</span>`}
+        <span class="pill">${pillText}</span>
+      `;
+      layer.appendChild(el);
+
+      // slow drift across screen
+      const speed = 0.12 + Math.random() * 0.25;
+      const dir = Math.random() > 0.5 ? 1 : -1;
+      let x = parseFloat(el.style.left);
+
+      function step() {
+        x += speed * dir;
+        if (x > 110) x = -10;
+        if (x < -10) x = 110;
+        el.style.left = x + "vw";
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // create ~18 tickers
+    for (let i = 0; i < 18; i++) makeTicker(i);
+
+    // --- Parallax glow follow (mouse)
+    const blobs = document.querySelectorAll(".blob");
+    window.addEventListener("mousemove", (e) => {
+      const cx = (e.clientX / window.innerWidth - 0.5) * 30;
+      const cy = (e.clientY / window.innerHeight - 0.5) * 30;
+      blobs.forEach((b, idx) => {
+        b.style.transform = `translate(${cx * (idx+1) * 0.25}px, ${cy * (idx+1) * 0.25}px)`;
+      });
+    });
+  </script>
 </body>
 </html>

@@ -68,6 +68,8 @@
                 <a href="market-intel.html" class="text-sm font-bold text-emerald-400 hover:text-white transition-colors">Market Intel</a>
                 <a href="index.html#research" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Deep Dives</a>
                 <a href="weq50.html" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">WEQ50 Index</a>
+                <a id="navLogin" href="login.html" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Login</a>
+                <button id="navLogout" class="hidden text-sm font-medium text-gray-300 hover:text-white transition-colors">Logout</button>
                 <a href="index.html#subscribe" class="bg-emerald-500 hover:bg-emerald-600 text-black font-bold py-2 px-5 rounded-md transition-colors text-sm">
                     SUBSCRIBE
                 </a>
@@ -77,12 +79,21 @@
     </header>
 
     <main>
-        <article class="relative">
+        <article class="relative" data-article-slug="article-florida.html">
             <!-- Article Header with Parallax Effect -->
             <header class="relative h-[60vh] md:h-[70vh] text-white overflow-hidden">
                 <!-- Blurred Background Image -->
                 <div id="article-header-bg" class="absolute inset-0 bg-cover bg-center filter blur-sm scale-110" style="background-image: url('images/article-header-bg.jpg');"></div>
                 <div class="absolute inset-0 bg-black/50"></div>
+
+                <!-- Save button (top-right) -->
+                <div class="absolute top-6 right-6 z-20">
+                    <button id="saveBtn"
+                        class="px-4 py-2 rounded-full border border-white/20 bg-black/30 hover:bg-black/40 backdrop-blur-md text-sm font-semibold flex items-center gap-2 transition-colors">
+                        <i class="fa-regular fa-bookmark"></i>
+                        <span id="saveBtnText">Save</span>
+                    </button>
+                </div>
                 
                 <!-- Content Container -->
                 <div class="relative h-full flex flex-col justify-center items-center text-center container mx-auto px-6">
@@ -104,12 +115,12 @@
                 <div class="container mx-auto px-6 max-w-4xl">
                     <div class="py-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
                         <div class="lg:col-span-8 article-content">
-                            <p class="text-lg text-gray-300">The Florida Supreme Court's decision to allow the adult-use cannabis legalization initiative on the November 2024 ballot has officially started the clock on what could become a **$6 billion market** virtually overnight. For multi-state operators (MSOs), the Sunshine State is no longer just a lucrative medical market; it's the single most important strategic prize in the nation. The operators who have fortified their positions in the state's vertically-integrated system stand to build an insurmountable lead, while newcomers will face immense barriers to entry. Dissecting who is best positioned requires a look beyond current revenue and into the strategic depth of their retail, cultivation, and processing footprints.</p>
+                            <p class="text-lg text-gray-300">The Florida Supreme Court's decision to allow the adult-use cannabis legalization initiative on the November 2024 ballot has officially started the clock on what could become a <strong>$6 billion market</strong> virtually overnight. For multi-state operators (MSOs), the Sunshine State is no longer just a lucrative medical market; it's the single most important strategic prize in the nation. The operators who have fortified their positions in the state's vertically-integrated system stand to build an insurmountable lead, while newcomers will face immense barriers to entry. Dissecting who is best positioned requires a look beyond current revenue and into the strategic depth of their retail, cultivation, and processing footprints.</p>
                             
                             <img src="images/article-florida-body.jpg" class="rounded-lg my-8 shadow-lg" alt="A sunny image of a Florida dispensary or coastline.">
 
                             <h2>The Incumbency Advantage: Trulieve's Fortress</h2>
-                            <p>No analysis of the Florida market can begin anywhere else but with Trulieve. With over 130 dispensaries, representing roughly a quarter of all retail locations in the state, their market dominance is staggering. This retail saturation provides two critical advantages in an adult-use scenario: **brand recognition and patient access**. Consumers are already familiar with the Trulieve brand, reducing customer acquisition costs. Furthermore, their expansive network means they are positioned within a short drive of the vast majority of the state's population and, crucially, its millions of annual tourists.</p>
+                            <p>No analysis of the Florida market can begin anywhere else but with Trulieve. With over 130 dispensaries, representing roughly a quarter of all retail locations in the state, their market dominance is staggering. This retail saturation provides two critical advantages in an adult-use scenario: <strong>brand recognition and patient access</strong>. Consumers are already familiar with the Trulieve brand, reducing customer acquisition costs. Furthermore, their expansive network means they are positioned within a short drive of the vast majority of the state's population and, crucially, its millions of annual tourists.</p>
                             <p>Beyond retail, Trulieve's cultivation and processing capacity is unparalleled. They have strategically invested in scaling their operations in anticipation of this moment. While competitors will be scrambling to build out new facilities to meet the exponential demand increase, Trulieve will be able to simply flip the switch, converting their existing capacity to serve a market that could triple in size. This first-mover advantage cannot be overstated.</p>
                             
                             <!-- Placeholder Ad -->
@@ -215,12 +226,103 @@
             const bg = document.getElementById('article-header-bg');
             if (byline && bg) {
                 const scrollY = window.scrollY;
-                // Move the byline up at half the scroll speed for a parallax effect
                 byline.style.transform = `translateY(${scrollY * 0.5}px)`;
-                // Move the background up slightly slower to enhance the effect
                 bg.style.transform = `translateY(${scrollY * 0.1}px) scale(1.1)`;
             }
         });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabaseClient.js"></script>
+    <script src="assets/js/authNav.js"></script>
+
+    <!-- Save Article logic -->
+    <script>
+      const sb = window.WE?.sb;
+
+      const saveBtn = document.getElementById("saveBtn");
+      const saveBtnText = document.getElementById("saveBtnText");
+      const articleEl = document.querySelector("article[data-article-slug]");
+      const slug = articleEl?.getAttribute("data-article-slug") || window.location.pathname.split("/").pop() || "article.html";
+
+      function setSavedUI(saved) {
+        if (!saveBtn) return;
+        if (saved) {
+          saveBtn.classList.add("border-emerald-400/50");
+          saveBtnText.textContent = "Saved ✓";
+          saveBtn.querySelector("i").className = "fa-solid fa-bookmark";
+        } else {
+          saveBtn.classList.remove("border-emerald-400/50");
+          saveBtnText.textContent = "Save";
+          saveBtn.querySelector("i").className = "fa-regular fa-bookmark";
+        }
+      }
+
+      async function getUserOrRedirect() {
+        const { data } = await sb.auth.getUser();
+        if (!data?.user) {
+          // send them to login, then back here
+          window.location.href = `login.html?next=${encodeURIComponent(window.location.pathname.split("/").pop())}`;
+          return null;
+        }
+        return data.user;
+      }
+
+      async function checkSaved() {
+        if (!sb) return;
+        const { data: userData } = await sb.auth.getUser();
+        if (!userData?.user) {
+          setSavedUI(false);
+          return;
+        }
+
+        const { data, error } = await sb
+          .from("saved_articles")
+          .select("id")
+          .eq("user_id", userData.user.id)
+          .eq("article_slug", slug)
+          .limit(1);
+
+        if (error) { setSavedUI(false); return; }
+        setSavedUI(!!(data && data.length));
+      }
+
+      async function toggleSaved() {
+        if (!sb) return;
+        const user = await getUserOrRedirect();
+        if (!user) return;
+
+        // check current
+        const { data } = await sb
+          .from("saved_articles")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("article_slug", slug)
+          .limit(1);
+
+        const alreadySaved = !!(data && data.length);
+
+        if (alreadySaved) {
+          const { error } = await sb
+            .from("saved_articles")
+            .delete()
+            .eq("user_id", user.id)
+            .eq("article_slug", slug);
+
+          if (error) return alert(error.message);
+          setSavedUI(false);
+        } else {
+          const { error } = await sb
+            .from("saved_articles")
+            .insert({ user_id: user.id, article_slug: slug });
+
+          if (error) return alert(error.message);
+          setSavedUI(true);
+        }
+      }
+
+      if (saveBtn) saveBtn.addEventListener("click", toggleSaved);
+      checkSaved();
     </script>
 </body>
 </html>

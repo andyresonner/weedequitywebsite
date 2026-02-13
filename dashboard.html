@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | Weed Equity</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-dark: #0f172a;
+  --accent-green: #34D399;
+  --accent-purple: #8B5CF6;
+}
+
+body {
+  background: radial-gradient(circle at 20% 20%, rgba(52,211,153,0.08), transparent 40%),
+              radial-gradient(circle at 80% 80%, rgba(139,92,246,0.08), transparent 40%),
+              #0f172a;
+  font-family: 'Inter', sans-serif;
+  color: #f9fafb;
+  overflow-x: hidden;
+}
+
+/* subtle animated grid */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridMove 40s linear infinite;
+  z-index: 0;
+}
+
+@keyframes gridMove {
+  from { background-position: 0 0; }
+  to { background-position: 60px 60px; }
+}
+
+.card {
+  background: rgba(31,41,55,0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.glow {
+  box-shadow: 0 0 15px rgba(52,211,153,0.4);
+}
+</style>
+</head>
+
+<body class="min-h-screen">
+
+<div class="grid-bg"></div>
+
+<div class="relative z-10">
+
+<header class="p-6 flex justify-between items-center">
+  <a href="index.html" class="text-2xl font-bold tracking-wide hover:text-white">WEED EQUITY</a>
+  <div class="flex items-center gap-4">
+    <span id="userEmail" class="text-sm text-gray-400"></span>
+    <button id="logoutBtn" class="text-sm text-gray-300 hover:text-white">Logout</button>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-6 py-10">
+
+  <div class="flex items-end justify-between gap-6 flex-wrap">
+    <h2 class="text-4xl font-bold">Your Dashboard</h2>
+    <a href="greenview.html" class="text-sm text-emerald-300 hover:text-emerald-200 underline">
+      Open GreenView →
+    </a>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-8 mt-10">
+
+    <!-- Watchlist -->
+    <div class="card p-6 rounded-xl">
+      <h3 class="text-xl font-semibold mb-4">Watchlist</h3>
+
+      <!-- Add stock -->
+      <div class="flex gap-2">
+        <input id="watchSymbol" placeholder="Add ticker (e.g., TLRY)"
+          class="w-full bg-gray-900/60 border border-gray-700 rounded px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-emerald-500"/>
+        <button id="addWatchBtn"
+          class="bg-emerald-500 text-black font-bold px-4 rounded hover:bg-emerald-400 transition">
+          Add
+        </button>
+      </div>
+
+      <ul id="watchlist" class="space-y-2 text-gray-300 text-sm mt-5">
+        <li class="text-gray-400">Loading…</li>
+      </ul>
+    </div>
+
+    <!-- Saved Articles -->
+    <div class="card p-6 rounded-xl">
+      <h3 class="text-xl font-semibold mb-4">Saved Articles</h3>
+      <ul id="savedArticles" class="space-y-2 text-gray-300 text-sm">
+        <li class="text-gray-400">Loading…</li>
+      </ul>
+      <p class="text-xs text-gray-500 mt-4">
+        Tip: we’ll add “Save” buttons on article pages next.
+      </p>
+    </div>
+
+    <!-- GreenView -->
+    <div class="card p-6 rounded-xl glow">
+      <h3 class="text-xl font-semibold mb-4">GreenView</h3>
+      <p class="text-gray-400 text-sm mb-6">
+        Real-time cannabis market heatmap. Your watchlist becomes your heatmap universe.
+      </p>
+      <a href="greenview.html"
+         class="block text-center bg-purple-500 hover:bg-purple-400 text-white py-2 rounded transition">
+        Enter GreenView →
+      </a>
+    </div>
+
+  </div>
+
+</main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabaseClient.js"></script>
+
+<script>
+  const sb = window.WE.sb;
+
+  const emailEl = document.getElementById("userEmail");
+  const watchlistEl = document.getElementById("watchlist");
+  const savedEl = document.getElementById("savedArticles");
+
+  const watchSymbolEl = document.getElementById("watchSymbol");
+  const addWatchBtn = document.getElementById("addWatchBtn");
+
+  let currentUser = null;
+
+  async function requireUser() {
+    const { data } = await sb.auth.getUser();
+    if (!data?.user) {
+      window.location.href = "login.html";
+      return null;
+    }
+    currentUser = data.user;
+    emailEl.textContent = data.user.email;
+    return data.user;
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, (m) => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
+  }
+
+  async function loadWatchlist() {
+    if (!currentUser) return;
+
+    const { data, error } = await sb
+      .from("watchlist")
+      .select("symbol, created_at")
+      .eq("user_id", currentUser.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      watchlistEl.innerHTML = `<li class="text-red-300">${esc(error.message)}</li>`;
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      watchlistEl.innerHTML = `<li class="text-gray-400">No stocks added yet.</li>`;
+      return;
+    }
+
+    watchlistEl.innerHTML = data.map(row => `
+      <li class="flex items-center justify-between">
+        <span class="font-semibold">${esc(row.symbol)}</span>
+        <button class="remove-watch text-xs text-red-300 hover:text-red-200" data-symbol="${esc(row.symbol)}">
+          Remove
+        </button>
+      </li>
+    `).join("");
+
+    document.querySelectorAll(".remove-watch").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const symbol = btn.dataset.symbol;
+        await sb.from("watchlist")
+          .delete()
+          .eq("user_id", currentUser.id)
+          .eq("symbol", symbol);
+
+        loadWatchlist();
+      });
+    });
+  }
+
+  async function loadSavedArticles() {
+    if (!currentUser) return;
+
+    const { data, error } = await sb
+      .from("saved_articles")
+      .select("article_slug, created_at")
+      .eq("user_id", currentUser.id)
+      .order("created_at", { ascending: false })
+      .limit(25);
+
+    if (error) {
+      savedEl.innerHTML = `<li class="text-red-300">${esc(error.message)}</li>`;
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      savedEl.innerHTML = `<li class="text-gray-400">No saved articles yet.</li>`;
+      return;
+    }
+
+    savedEl.innerHTML = data.map(row => `
+      <li class="flex items-center justify-between gap-3">
+        <a class="text-emerald-300 hover:text-emerald-200 underline"
+           href="${esc(row.article_slug)}">${esc(row.article_slug)}</a>
+        <button class="remove-article text-xs text-red-300 hover:text-red-200"
+                data-slug="${esc(row.article_slug)}">
+          Remove
+        </button>
+      </li>
+    `).join("");
+
+    document.querySelectorAll(".remove-article").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const slug = btn.dataset.slug;
+        await sb.from("saved_articles")
+          .delete()
+          .eq("user_id", currentUser.id)
+          .eq("article_slug", slug);
+
+        loadSavedArticles();
+      });
+    });
+  }
+
+  async function addToWatchlist() {
+    if (!currentUser) return;
+
+    const raw = watchSymbolEl.value.trim().toUpperCase();
+    if (!raw) return;
+
+    addWatchBtn.disabled = true;
+    addWatchBtn.style.opacity = "0.75";
+
+    const { error } = await sb.from("watchlist").insert({
+      user_id: currentUser.id,
+      symbol: raw
+    });
+
+    addWatchBtn.disabled = false;
+    addWatchBtn.style.opacity = "1";
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    watchSymbolEl.value = "";
+    loadWatchlist();
+  }
+
+  addWatchBtn.addEventListener("click", addToWatchlist);
+  watchSymbolEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") addToWatchlist();
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await sb.auth.signOut();
+    window.location.href = "index.html";
+  });
+
+  (async function init() {
+    const user = await requireUser();
+    if (!user) return;
+
+    await loadWatchlist();
+    await loadSavedArticles();
+  })();
+</script>
+
+</body>
+</html>

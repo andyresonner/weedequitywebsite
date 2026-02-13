@@ -50,6 +50,8 @@
                 <a href="index.html#intel" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Market Intel</a>
                 <a href="index.html#research" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Deep Dives</a>
                 <a href="weq50.html" class="text-sm font-bold accent-green-text hover:text-white transition-colors">WEQ50 Index</a>
+                <a id="navLogin" href="login.html" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Login</a>
+                <button id="navLogout" class="hidden text-sm font-medium text-gray-300 hover:text-white transition-colors">Logout</button>
                 <a href="index.html#subscribe" class="bg-emerald-500 hover:bg-emerald-600 text-black font-bold py-2 px-5 rounded-md transition-colors text-sm">
                     SUBSCRIBE
                 </a>
@@ -63,6 +65,8 @@
             <a href="index.html#intel" class="block text-gray-300 hover:text-white transition-colors">Market Intel</a>
             <a href="index.html#research" class="block text-gray-300 hover:text-white transition-colors">Deep Dives</a>
             <a href="weq50.html" class="block accent-green-text hover:text-white transition-colors">WEQ50 Index</a>
+            <a id="navLoginMobile" href="login.html" class="block text-gray-300 hover:text-white transition-colors">Login</a>
+            <button id="navLogoutMobile" class="hidden w-full text-left text-gray-300 hover:text-white transition-colors">Logout</button>
             <a href="index.html#subscribe" class="block bg-emerald-500 mt-2 text-center text-black font-bold py-2 px-5 rounded-md transition-colors">
                 SUBSCRIBE
             </a>
@@ -321,5 +325,8 @@
             });
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabaseClient.js"></script>
+    <script src="assets/js/authNav.js"></script>
 </body>
 </html>
